@@ -28,7 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ThreadSecurityServerHandler extends ChannelInboundHandlerAdapter {
 
-    static AtomicInteger sum  = new AtomicInteger(0);
+    static AtomicInteger sum = new AtomicInteger(0);
+
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         System.out.println("Server receive client message : " + sum.incrementAndGet());
         ctx.write(msg);

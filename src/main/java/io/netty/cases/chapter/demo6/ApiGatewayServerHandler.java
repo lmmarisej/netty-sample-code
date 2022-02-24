@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class ApiGatewayServerHandler extends ChannelInboundHandlerAdapter {
 
     ExecutorService executorService = Executors.newFixedThreadPool(8);
+
     @Override
 //    public void channelRead(ChannelHandlerContext ctx, Object msg) {
 //        ctx.write(msg);
@@ -49,10 +50,10 @@ public class ApiGatewayServerHandler extends ChannelInboundHandlerAdapter {
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ctx.write(msg);
-        char [] req = new char[((ByteBuf)msg).readableBytes()];
-        executorService.execute(()->
+        char[] req = new char[((ByteBuf) msg).readableBytes()];
+        executorService.execute(() ->
         {
-            char [] dispatchReq = req;
+            char[] dispatchReq = req;
 //            try
 //            {
 //                TimeUnit.MICROSECONDS.sleep(500);

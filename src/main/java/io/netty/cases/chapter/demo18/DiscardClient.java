@@ -42,24 +42,23 @@ public final class DiscardClient {
         final SslContext sslCtx = SslContextBuilder.forClient()
                 .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
         EventLoopGroup group = new NioEventLoopGroup();
-            Bootstrap b = new Bootstrap();
-            b.group(group)
-             .channel(NioSocketChannel.class)
-                    .option(ChannelOption.SO_REUSEADDR,true)
-             .handler(new ChannelInitializer<SocketChannel>() {
-                 @Override
-                 protected void initChannel(SocketChannel ch) throws Exception {
-                     ChannelPipeline p = ch.pipeline();
-                     if (sslCtx != null) {
-                         p.addLast(sslCtx.newHandler(ch.alloc()));
-                     }
-                     p.addLast(new DiscardClientHandler());
-                 }
-             });
-            for(int i = 0; i < 30000; i++)
-            {
-                b.connect(HOST, PORT).sync();
-                TimeUnit.MILLISECONDS.sleep(100);
-            }
+        Bootstrap b = new Bootstrap();
+        b.group(group)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline p = ch.pipeline();
+                        if (sslCtx != null) {
+                            p.addLast(sslCtx.newHandler(ch.alloc()));
+                        }
+                        p.addLast(new DiscardClientHandler());
+                    }
+                });
+        for (int i = 0; i < 30000; i++) {
+            b.connect(HOST, PORT).sync();
+            TimeUnit.MILLISECONDS.sleep(100);
+        }
     }
 }

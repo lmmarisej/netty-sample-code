@@ -34,15 +34,15 @@ public class ServiceTraceServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        scheduledExecutorService.scheduleAtFixedRate(()->
+        scheduledExecutorService.scheduleAtFixedRate(() ->
         {
             int qps = totalSendBytes.getAndSet(0);
             System.out.println("The server write rate is : " + qps + " bytes/s");
-        },0,1000, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        int sendBytes = ((ByteBuf)msg).readableBytes();
+        int sendBytes = ((ByteBuf) msg).readableBytes();
         ctx.writeAndFlush(msg);
         totalSendBytes.getAndAdd(sendBytes);
     }

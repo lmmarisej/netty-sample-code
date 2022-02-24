@@ -32,12 +32,13 @@ import java.util.concurrent.Executors;
 public class RouterServerHandler extends ChannelInboundHandlerAdapter {
     static ExecutorService executorService = Executors.newSingleThreadExecutor();
     PooledByteBufAllocator allocator = new PooledByteBufAllocator(false);
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf reqMsg = (ByteBuf)msg;
-        byte [] body = new byte[reqMsg.readableBytes()];
+        ByteBuf reqMsg = (ByteBuf) msg;
+        byte[] body = new byte[reqMsg.readableBytes()];
 //        ReferenceCountUtil.release(reqMsg);
-        executorService.execute(()->
+        executorService.execute(() ->
         {
             //解析请求消息，做路由转发，代码省略...
             //转发成功，返回响应给客户端
@@ -46,6 +47,7 @@ public class RouterServerHandler extends ChannelInboundHandlerAdapter {
             ctx.writeAndFlush(respMsg);
         });
     }
+
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();

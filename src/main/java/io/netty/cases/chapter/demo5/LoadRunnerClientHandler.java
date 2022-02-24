@@ -48,7 +48,7 @@ public class LoadRunnerClientHandler extends ChannelInboundHandlerAdapter {
      */
     public LoadRunnerClientHandler() {
         firstMessage = Unpooled.buffer(SIZE);
-        for (int i = 0; i < firstMessage.capacity(); i ++) {
+        for (int i = 0; i < firstMessage.capacity(); i++) {
             firstMessage.writeByte((byte) i);
         }
     }
@@ -65,8 +65,7 @@ public class LoadRunnerClientHandler extends ChannelInboundHandlerAdapter {
                 }
                 ByteBuf msg = null;
                 final int len = "Netty OOM Example".getBytes().length;
-                while(true)
-                {
+                while (true) {
                     msg = Unpooled.wrappedBuffer("Netty OOM Example".getBytes());
                     ctx.writeAndFlush(msg);
                 }
@@ -76,8 +75,7 @@ public class LoadRunnerClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg)
-    {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ReferenceCountUtil.release(msg);
     }
 

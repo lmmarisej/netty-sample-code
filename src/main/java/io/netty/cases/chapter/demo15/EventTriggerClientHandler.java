@@ -43,20 +43,18 @@ public class EventTriggerClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         scheduledExecutorService.scheduleAtFixedRate(()
-        ->{
+                -> {
             int counter = SEQ.incrementAndGet();
-            if (counter % 10 == 0)
-            {
+            if (counter % 10 == 0) {
                 ctx.writeAndFlush(Unpooled.copiedBuffer((ECHO_REQ + DELIMITER).getBytes()));
-            }
-            else
+            } else
                 ctx.writeAndFlush(Unpooled.copiedBuffer(ECHO_REQ.getBytes()));
-        },0,1000, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-	cause.printStackTrace();
-	ctx.close();
+        cause.printStackTrace();
+        ctx.close();
     }
 }

@@ -35,18 +35,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ServiceTraceProfileServerHandler extends ChannelInboundHandlerAdapter {
     AtomicInteger totalReadBytes = new AtomicInteger(0);
     static ScheduledExecutorService kpiExecutorService = Executors.newSingleThreadScheduledExecutor();
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        kpiExecutorService.scheduleAtFixedRate(()->
+        kpiExecutorService.scheduleAtFixedRate(() ->
         {
             int readRates = totalReadBytes.getAndSet(0);
             System.out.println(ctx.channel() + "--> read rates " + readRates + " bytes/s");
-        },0,1000, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
         ctx.fireChannelActive();
     }
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        int readableBytes = ((ByteBuf)msg).readableBytes();
+        int readableBytes = ((ByteBuf) msg).readableBytes();
         totalReadBytes.getAndAdd(readableBytes);
         ctx.fireChannelRead(msg);
     }

@@ -30,19 +30,19 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ConcurrentPerformanceClientHandler extends ChannelInboundHandlerAdapter {
     static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        scheduledExecutorService.scheduleAtFixedRate(()->
+        scheduledExecutorService.scheduleAtFixedRate(() ->
         {
-            for(int i = 0; i < 100; i++)
-            {
+            for (int i = 0; i < 100; i++) {
                 ByteBuf firstMessage = Unpooled.buffer(ConcurrentPerformanceClient.MSG_SIZE);
-                for (int k = 0;  k < firstMessage.capacity();  k ++) {
-                    firstMessage.writeByte((byte)k);
+                for (int k = 0; k < firstMessage.capacity(); k++) {
+                    firstMessage.writeByte((byte) k);
                 }
                 ctx.writeAndFlush(firstMessage);
             }
-        },0,1000, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override

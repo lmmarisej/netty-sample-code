@@ -44,32 +44,28 @@ public class LoadRunnerSleepClientHandler extends ChannelInboundHandlerAdapter {
      */
     public LoadRunnerSleepClientHandler() {
         firstMessage = Unpooled.buffer(SIZE);
-        for (int i = 0; i < firstMessage.capacity(); i ++) {
+        for (int i = 0; i < firstMessage.capacity(); i++) {
             firstMessage.writeByte((byte) i);
         }
     }
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        loadRunner = new Runnable() {
-            @Override
-            public void run() {
+        loadRunner = () -> {
+            try {
+                TimeUnit.SECONDS.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            ByteBuf msg = null;
+            while (true) {
+                byte[] body = new byte[SIZE];
+                msg = Unpooled.wrappedBuffer(body);
+                ctx.writeAndFlush(msg);
                 try {
-                    TimeUnit.SECONDS.sleep(30);
+                    TimeUnit.MILLISECONDS.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                ByteBuf msg = null;
-                while(true)
-                {
-                    byte [] body = new byte[SIZE];
-                    msg = Unpooled.wrappedBuffer(body);
-                    ctx.writeAndFlush(msg);
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         };
@@ -77,8 +73,7 @@ public class LoadRunnerSleepClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg)
-    {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ReferenceCountUtil.release(msg);
     }
 

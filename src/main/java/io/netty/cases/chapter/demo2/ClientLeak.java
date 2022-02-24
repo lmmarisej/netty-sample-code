@@ -35,16 +35,13 @@ public final class ClientLeak {
     static final String HOST = System.getProperty("host", "127.0.0.1");
     static final int PORT = Integer.parseInt(System.getProperty("port", "18081"));
 
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         TimeUnit.SECONDS.sleep(30);
         initClientPool(100);
     }
 
-    static void initClientPool(int poolSize) throws Exception
-    {
-        for(int i = 0; i < poolSize; i++)
-        {
+    static void initClientPool(int poolSize) throws Exception {
+        for (int i = 0; i < poolSize; i++) {
             EventLoopGroup group = new NioEventLoopGroup();
             Bootstrap b = new Bootstrap();
             b.group(group)
@@ -58,7 +55,7 @@ public final class ClientLeak {
                         }
                     });
             ChannelFuture f = b.connect(HOST, PORT).sync();
-            f.channel().closeFuture().addListener((r)->
+            f.channel().closeFuture().addListener((r) ->
             {
                 group.shutdownGracefully();
             });

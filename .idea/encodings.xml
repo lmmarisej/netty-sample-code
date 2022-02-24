@@ -3,6 +3,7 @@
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="GBK">
     <file url="file://$PROJECT_DIR$/src/main/java/io/netty/cases/chapter/demo1/DaemonT1.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/main/java/io/netty/cases/chapter/demo5/EchoServerHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/io/netty/cases/chapter/demo5/LoadRunnerWaterClientHandler.java" charset="UTF-8" />
     <file url="PROJECT" charset="GBK" />
   </component>
 </project>

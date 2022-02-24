@@ -33,27 +33,28 @@ import io.netty.util.concurrent.EventExecutorGroup;
 public final class ServiceTraceServer {
 
     static final int PORT = Integer.parseInt(System.getProperty("port", "18089"));
-      static final EventExecutorGroup executor = new DefaultEventExecutorGroup(100);
+    static final EventExecutorGroup executor = new DefaultEventExecutorGroup(100);
+
     public static void main(String[] args) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             .option(ChannelOption.SO_BACKLOG, 100)
-             .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new ChannelInitializer<SocketChannel>() {
-                 @Override
-                 public void initChannel(SocketChannel ch) throws Exception {
-                     ch.config().setAllocator(UnpooledByteBufAllocator.DEFAULT);
-                     ChannelPipeline p = ch.pipeline();
+                    .channel(NioServerSocketChannel.class)
+                    .option(ChannelOption.SO_BACKLOG, 100)
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ch.config().setAllocator(UnpooledByteBufAllocator.DEFAULT);
+                            ChannelPipeline p = ch.pipeline();
 //                     p.addLast(new ServiceTraceServerHandler());
-                     p.addFirst(new ServiceTraceProfileServerHandler());
-                     p.addLast(new ServiceTraceServerHandlerV2());
-                 }
-             }).childOption(ChannelOption.SO_RCVBUF, 8 * 1024)
-            .childOption(ChannelOption.SO_SNDBUF, 8 * 1024);
+                            p.addFirst(new ServiceTraceProfileServerHandler());
+                            p.addLast(new ServiceTraceServerHandlerV2());
+                        }
+                    }).childOption(ChannelOption.SO_RCVBUF, 8 * 1024)
+                    .childOption(ChannelOption.SO_SNDBUF, 8 * 1024);
             ChannelFuture f = b.bind(PORT).sync();
             f.channel().closeFuture().sync();
         } finally {
