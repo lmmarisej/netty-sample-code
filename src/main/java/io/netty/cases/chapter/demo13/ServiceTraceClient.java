@@ -25,7 +25,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
- * Created by ¿Ó¡÷∑Â on 2018/8/19.
+ * Created by ÊùéÊûóÂ≥∞ on 2018/8/19.
  */
 public class ServiceTraceClient {
 
@@ -45,7 +45,7 @@ public class ServiceTraceClient {
                 .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    public void initChannel(SocketChannel ch) throws Exception {
+                    public void initChannel(SocketChannel ch) {
                         ch.pipeline().addLast(new ServiceTraceClientHandler());
                     }
                 });

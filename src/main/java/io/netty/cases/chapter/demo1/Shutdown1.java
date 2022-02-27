@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class Shutdown1 {
 
     public static void main(String[] args) throws Exception {
-        Runtime.getRuntime().addShutdownHook(new java.lang.Thread(() ->
+        Runtime.getRuntime().addShutdownHook(new Thread(() ->
         {
             System.out.println("ShutdownHook execute start...");
             System.out.println("Netty NioEventLoopGroup shutdownGracefully...");
@@ -17,9 +17,9 @@ public class Shutdown1 {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("ShutdownHook execute end...");
+            System.out.println("ShutdownHook execute end...");      // 强行停止会让停止回调来不及执行
         }, ""));
-        TimeUnit.SECONDS.sleep(7);
+        TimeUnit.SECONDS.sleep(2);
         System.exit(0);
     }
 }

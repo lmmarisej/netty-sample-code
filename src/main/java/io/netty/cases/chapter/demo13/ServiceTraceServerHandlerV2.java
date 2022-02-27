@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/19.
+ * Created by æŽæž—å³° on 2018/8/19.
  */
 public class ServiceTraceServerHandlerV2 extends ChannelInboundHandlerAdapter {
     AtomicInteger totalSendBytes = new AtomicInteger(0);
@@ -41,13 +41,11 @@ public class ServiceTraceServerHandlerV2 extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        scheduledExecutorService.scheduleAtFixedRate(() ->
-        {
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
             int qps = totalSendBytes.getAndSet(0);
             System.out.println("The server write rate is : " + qps + " bytes/s");
         }, 0, 1000, TimeUnit.MILLISECONDS);
-        kpiExecutorService.scheduleAtFixedRate(() ->
-        {
+        kpiExecutorService.scheduleAtFixedRate(() -> {
             Iterator<EventExecutor> executorGroups = ctx.executor().parent().iterator();
             while (executorGroups.hasNext()) {
                 SingleThreadEventExecutor executor = (SingleThreadEventExecutor) executorGroups.next();
@@ -58,21 +56,16 @@ public class ServiceTraceServerHandlerV2 extends ChannelInboundHandlerAdapter {
                     System.out.println(executor + " pending size in queue is : --> " + size);
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
-        writeQueKpiExecutorService.scheduleAtFixedRate(() ->
-        {
+        writeQueKpiExecutorService.scheduleAtFixedRate(() -> {
             long pendingSize = ((NioSocketChannel) ctx.channel()).unsafe().outboundBuffer().totalPendingWriteBytes();
-            System.out.println(ctx.channel() + "--> " + " ChannelOutboundBuffer's totalPendingWriteBytes is : "
-                    + pendingSize + " bytes");
+            System.out.println(ctx.channel() + "--> " + " ChannelOutboundBuffer's totalPendingWriteBytes is : " + pendingSize + " bytes");
         }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         int sendBytes = ((ByteBuf) msg).readableBytes();
         ChannelFuture writeFuture = ctx.write(msg);
-        writeFuture.addListener((f) ->
-        {
-            totalSendBytes.getAndAdd(sendBytes);
-        });
+        writeFuture.addListener((f) -> totalSendBytes.getAndAdd(sendBytes));
         ctx.flush();
     }
 

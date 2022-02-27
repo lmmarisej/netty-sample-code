@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class EventTriggerClientHandler extends ChannelInboundHandlerAdapter {
 
-    private static AtomicInteger SEQ = new AtomicInteger(0);
+    private static final AtomicInteger SEQ = new AtomicInteger(0);
 
     static final String ECHO_REQ = "Hi,welcome to Netty ";
 
@@ -42,13 +42,13 @@ public class EventTriggerClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        scheduledExecutorService.scheduleAtFixedRate(()
-                -> {
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
             int counter = SEQ.incrementAndGet();
             if (counter % 10 == 0) {
-                ctx.writeAndFlush(Unpooled.copiedBuffer((ECHO_REQ + DELIMITER).getBytes()));
-            } else
-                ctx.writeAndFlush(Unpooled.copiedBuffer(ECHO_REQ.getBytes()));
+                ctx.writeAndFlush(Unpooled.copiedBuffer((ECHO_REQ + DELIMITER).getBytes()));    // 每10秒发一个分隔符+一个消息
+            } else {
+                ctx.writeAndFlush(Unpooled.copiedBuffer(ECHO_REQ.getBytes()));      // 每秒发一个消息
+            }
         }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 

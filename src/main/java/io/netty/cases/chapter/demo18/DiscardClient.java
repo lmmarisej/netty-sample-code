@@ -39,8 +39,7 @@ public final class DiscardClient {
 
     public static void main(String[] args) throws Exception {
         // Configure SSL.
-        final SslContext sslCtx = SslContextBuilder.forClient()
-                .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        final SslContext sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
         EventLoopGroup group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
         b.group(group)
@@ -48,11 +47,9 @@ public final class DiscardClient {
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
+                    protected void initChannel(SocketChannel ch) {
                         ChannelPipeline p = ch.pipeline();
-                        if (sslCtx != null) {
-                            p.addLast(sslCtx.newHandler(ch.alloc()));
-                        }
+                        p.addLast(sslCtx.newHandler(ch.alloc()));
                         p.addLast(new DiscardClientHandler());
                     }
                 });

@@ -5,39 +5,37 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/8.
+ * Created by ææ—å³° on 2018/8/8.
  */
 public class PoolByteBufPerformanceTest {
 
     public static void main(String[] args) {
-//        unPoolTest();
         poolTest();
+        unPoolTest();
     }
 
     static void unPoolTest() {
-        //·ÇÄÚ´æ³ØÄ£Ê½
+        //éå†…å­˜æ± æ¨¡å¼
         long beginTime = System.currentTimeMillis();
-        ByteBuf buf = null;
-        int maxTimes = 100000000;
+        ByteBuf buf;
+        int maxTimes = 10_000_000;
         for (int i = 0; i < maxTimes; i++) {
             buf = Unpooled.buffer(10 * 1024);
             buf.release();
         }
-        System.out.println("Execute " + maxTimes + " times cost time : "
-                + (System.currentTimeMillis() - beginTime));
+        System.out.println("Execute " + maxTimes + " times cost time : " + (System.currentTimeMillis() - beginTime));
     }
 
     static void poolTest() {
-        //ÄÚ´æ³ØÄ£Ê½
-        PooledByteBufAllocator allocator = new PooledByteBufAllocator(false);
+        //å†…å­˜æ± æ¨¡å¼
         long beginTime = System.currentTimeMillis();
-        ByteBuf buf = null;
-        int maxTimes = 100000000;
+        ByteBuf buf;
+        int maxTimes = 10_000_000;
+        PooledByteBufAllocator allocator = new PooledByteBufAllocator(false);
         for (int i = 0; i < maxTimes; i++) {
             buf = allocator.heapBuffer(10 * 1024);
             buf.release();
         }
-        System.out.println("Execute " + maxTimes + " times cost time : "
-                + (System.currentTimeMillis() - beginTime));
+        System.out.println("Execute " + maxTimes + " times cost time : " + (System.currentTimeMillis() - beginTime));
     }
 }

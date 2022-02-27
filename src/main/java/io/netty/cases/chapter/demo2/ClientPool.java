@@ -39,19 +39,23 @@ public final class ClientPool {
 
     static void initClientPool(int poolSize) throws Exception {
         EventLoopGroup group = new NioEventLoopGroup();
+        // Bootstrap非线程安全
         Bootstrap b = new Bootstrap();
         b.group(group)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    public void initChannel(SocketChannel ch) throws Exception {
+                    public void initChannel(SocketChannel ch) {
                         ChannelPipeline p = ch.pipeline();
                         p.addLast(new LoggingHandler());
                     }
                 });
         for (int i = 0; i < poolSize; i++) {
-            b.connect(HOST, PORT).sync();
+            // connect线程安全
+            // 1.创建一个NioSocketChannel
+            // 2.使用EventLoopGroup中的一个EventLoop线程去处理该Channel
+            b.connect(HOST, PORT).sync();       // IO多路复用，用有限的线程，处理多个TCP连接
         }
     }
 }

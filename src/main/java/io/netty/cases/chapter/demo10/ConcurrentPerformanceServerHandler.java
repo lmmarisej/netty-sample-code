@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by ¿Ó¡÷∑Â on 2018/8/19.
+ * Created by ÊùéÊûóÂ≥∞ on 2018/8/19.
  */
 public class ConcurrentPerformanceServerHandler extends ChannelInboundHandlerAdapter {
     AtomicInteger counter = new AtomicInteger(0);
@@ -34,8 +34,7 @@ public class ConcurrentPerformanceServerHandler extends ChannelInboundHandlerAda
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        scheduledExecutorService.scheduleAtFixedRate(() ->
-        {
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
             int qps = counter.getAndSet(0);
             System.out.println("The server QPS is : " + qps);
         }, 0, 1000, TimeUnit.MILLISECONDS);
@@ -44,7 +43,6 @@ public class ConcurrentPerformanceServerHandler extends ChannelInboundHandlerAda
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ((ByteBuf) msg).release();
         counter.incrementAndGet();
-        //“µŒÒ¬ﬂº≠¥¶¿Ì£¨ƒ£ƒ‚“µŒÒ∑√Œ DB°¢ª∫¥Êµ»£¨ ±—”¥”100-1000∫¡√Î÷Æº‰≤ªµ»
         Random random = new Random();
         try {
             TimeUnit.MILLISECONDS.sleep(random.nextInt(1000));

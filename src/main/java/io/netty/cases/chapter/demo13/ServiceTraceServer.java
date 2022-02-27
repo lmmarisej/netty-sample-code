@@ -28,7 +28,7 @@ import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 
 /**
- * Created by ¿Ó¡÷∑Â on 2018/8/19.
+ * Created by ÊùéÊûóÂ≥∞ on 2018/8/19.
  */
 public final class ServiceTraceServer {
 
@@ -46,7 +46,7 @@ public final class ServiceTraceServer {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ch.config().setAllocator(UnpooledByteBufAllocator.DEFAULT);
                             ChannelPipeline p = ch.pipeline();
 //                     p.addLast(new ServiceTraceServerHandler());

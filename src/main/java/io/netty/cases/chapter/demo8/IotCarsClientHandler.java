@@ -23,14 +23,13 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/18.
+ * Created by æŽæž—å³° on 2018/8/18.
  */
 public class IotCarsClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        new Thread(() ->
-        {
+        new Thread(() -> {
             while (true) {
                 ByteBuf firstMessage = Unpooled.buffer(IotCarsClient.MSG_SIZE);
                 for (int i = 0; i < firstMessage.capacity(); i++) {
@@ -43,7 +42,8 @@ public class IotCarsClientHandler extends ChannelInboundHandlerAdapter {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }
+        ).start();
     }
 
     @Override

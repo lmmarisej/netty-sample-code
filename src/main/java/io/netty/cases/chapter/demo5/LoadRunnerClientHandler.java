@@ -16,20 +16,16 @@
 package io.netty.cases.chapter.demo5;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.*;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/11.
+ * Created by æŽæž—å³° on 2018/8/11.
  */
 public class LoadRunnerClientHandler extends ChannelInboundHandlerAdapter {
 
@@ -55,20 +51,17 @@ public class LoadRunnerClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        loadRunner = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    TimeUnit.SECONDS.sleep(30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ByteBuf msg = null;
-                final int len = "Netty OOM Example".getBytes().length;
-                while (true) {
-                    msg = Unpooled.wrappedBuffer("Netty OOM Example".getBytes());
-                    ctx.writeAndFlush(msg);
-                }
+        loadRunner = () -> {
+            try {
+                TimeUnit.SECONDS.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            ByteBuf msg;
+            final int len = "Netty OOM Example".getBytes().length;
+            while (true) {
+                msg = Unpooled.wrappedBuffer("Netty OOM Example".getBytes());
+                ctx.writeAndFlush(msg);
             }
         };
         new Thread(loadRunner, "LoadRunner-Thread").start();

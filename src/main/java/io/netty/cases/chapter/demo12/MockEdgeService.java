@@ -7,7 +7,7 @@ import io.netty.buffer.UnpooledHeapByteBuf;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/27.
+ * Created by ææ—å³° on 2018/8/27.
  */
 public class MockEdgeService {
 

@@ -28,27 +28,24 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/18.
+ * Created by ææ—å³° on 2018/8/18.
  */
 public class IotCarsServerHandler extends ChannelInboundHandlerAdapter {
     static AtomicInteger sum = new AtomicInteger(0);
-    static ExecutorService executorService = new ThreadPoolExecutor(1, 3, 30, TimeUnit.SECONDS,
-            new ArrayBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.CallerRunsPolicy());
+    static ExecutorService executorService =
+            new ThreadPoolExecutor(1, 3, 30, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(1000), new ThreadPoolExecutor.CallerRunsPolicy());
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         System.out.println(new Date() + "--> Server receive client message : " + sum.incrementAndGet());
-        executorService.execute(() ->
-        {
+        executorService.execute(() -> {
             ByteBuf req = (ByteBuf) msg;
-            //ÆäËüÒµÎñÂß¼­´¦Àí£¬·ÃÎÊÊı¾İ¿â
             if (sum.get() % 100 == 0 || (Thread.currentThread() == ctx.channel().eventLoop()))
                 try {
-                    //·ÃÎÊÊı¾İ¿â£¬Ä£ÄâÅ¼ÏÖµÄÊı¾İ¿âÂı£¬Í¬²½×èÈû15Ãë
                     TimeUnit.SECONDS.sleep(15);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            //×ª·¢ÏûÏ¢£¬´Ë´¦´úÂëÊ¡ÂÔ£¬×ª·¢³É¹¦Ö®ºó·µ»ØÏìÓ¦¸øÖÕ¶Ë
             ctx.writeAndFlush(req);
         });
     }

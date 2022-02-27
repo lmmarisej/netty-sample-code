@@ -24,7 +24,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 /**
- * Created by ¿Ó¡÷∑Â on 2018/8/18.
+ * Created by ÊùéÊûóÂ≥∞ on 2018/8/18.
  */
 public final class IotCarsServer {
 
@@ -41,7 +41,7 @@ public final class IotCarsServer {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
 //                     p.addLast(new IotCarsServerHandler());
                             p.addLast(new IotCarsDiscardServerHandler());

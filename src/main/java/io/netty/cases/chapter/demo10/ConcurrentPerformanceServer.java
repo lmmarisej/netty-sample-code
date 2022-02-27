@@ -17,18 +17,18 @@ package io.netty.cases.chapter.demo10;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.cases.chapter.demo13.ServiceTraceServerHandler;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 
 /**
- * Created by ���ַ� on 2018/8/19.
+ * Created by 李林峰 on 2018/8/19.
  */
 public final class ConcurrentPerformanceServer {
 
@@ -40,6 +40,7 @@ public final class ConcurrentPerformanceServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
+            // 所有的Channel-Pipeline使用同一个线程池
             ChannelHandler serviceHandler = new ConcurrentPerformanceServerHandlerV2();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
@@ -47,10 +48,10 @@ public final class ConcurrentPerformanceServer {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ch.config().setAllocator(UnpooledByteBufAllocator.DEFAULT);
                             ChannelPipeline p = ch.pipeline();
-//                     p.addLast(executor, new ServiceTraceServerHandler());
+//                            p.addLast(executor, new ServiceTraceServerHandler());   // 为每个Channel-Pipeline绑定一个线程池
                             p.addLast(serviceHandler);
                         }
                     }).childOption(ChannelOption.SO_RCVBUF, 8 * 1024)

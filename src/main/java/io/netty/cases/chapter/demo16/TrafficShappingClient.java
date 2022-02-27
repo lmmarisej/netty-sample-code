@@ -42,13 +42,9 @@ public class TrafficShappingClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch)
-                                throws Exception {
-                            ByteBuf delimiter = Unpooled.copiedBuffer("$_"
-                                    .getBytes());
-                            ch.pipeline().addLast(
-                                    new DelimiterBasedFrameDecoder(2048 * 1024,
-                                            delimiter));
+                        public void initChannel(SocketChannel ch) {
+                            ByteBuf delimiter = Unpooled.copiedBuffer("$_".getBytes());
+                            ch.pipeline().addLast(new DelimiterBasedFrameDecoder(2048 * 1024, delimiter));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new TrafficShappingClientHandler());
                         }
@@ -63,15 +59,11 @@ public class TrafficShappingClient {
         }
     }
 
-    /**
-     * @param args
-     * @throws Exception
-     */
     public static void main(String[] args) throws Exception {
         int port = 18091;
         if (args != null && args.length > 0) {
             try {
-                port = Integer.valueOf(args[0]);
+                port = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
                 // 采用默认值
             }

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/19.
+ * Created by ææ—å³° on 2018/8/19.
  */
 public class ConcurrentPerformanceClientHandler extends ChannelInboundHandlerAdapter {
     static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();

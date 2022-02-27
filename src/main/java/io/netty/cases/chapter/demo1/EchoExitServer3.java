@@ -28,13 +28,13 @@ public class EchoExitServer3 {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new LoggingHandler(LogLevel.INFO));
                         }
                     });
             ChannelFuture f = b.bind(18080).sync();
-            f.channel().closeFuture().sync();
+            f.channel().closeFuture().sync();       // main线程阻塞的同步等待NioServerSocketChannel线程关闭
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

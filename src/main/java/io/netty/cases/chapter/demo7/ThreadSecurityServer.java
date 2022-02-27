@@ -24,7 +24,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 /**
- * Created by ���ַ� on 2018/8/11.
+ * Created by 李林峰 on 2018/8/11.
  */
 public final class ThreadSecurityServer {
 
@@ -38,10 +38,12 @@ public final class ThreadSecurityServer {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 100)
+                    // ServerBootstrap initialization 执行
                     .handler(new LoggingHandler(LogLevel.INFO))
+                    // connection complete 时执行
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new ThreadSecurityServerHandler());
                         }

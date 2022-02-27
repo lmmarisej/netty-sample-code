@@ -36,8 +36,7 @@ import io.netty.handler.traffic.ChannelTrafficShapingHandler;
  */
 public class TrafficShappingServer {
     public void bind(int port) throws Exception {
-        // 配置服务端的NIO线程组
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup();     // 配置服务端的NIO线程组
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
@@ -47,38 +46,23 @@ public class TrafficShappingServer {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch)
-                                throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast("Channel Traffic Shaping", new ChannelTrafficShapingHandler(1024 * 1024, 1024 * 1024, 1000));
-                            ByteBuf delimiter = Unpooled.copiedBuffer("$_"
-                                    .getBytes());
-                            ch.pipeline().addLast(
-                                    new DelimiterBasedFrameDecoder(2048 * 1024,
-                                            delimiter));
+                            ByteBuf delimiter = Unpooled.copiedBuffer("$_".getBytes());
+                            ch.pipeline().addLast(new DelimiterBasedFrameDecoder(2048 * 1024, delimiter));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new TrafficShapingServerHandler());
                         }
                     });
-            // 绑定端口，同步等待成功
-            ChannelFuture f = b.bind(port).sync();
-            // 等待服务端监听端口关闭
-            f.channel().closeFuture().sync();
+            ChannelFuture f = b.bind(port).sync();      // 绑定端口，同步等待成功
+            f.channel().closeFuture().sync();           // 等待服务端监听端口关闭
         } finally {
-            // 优雅退出，释放线程池资源
-            bossGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();             // 优雅退出，释放线程池资源
             workerGroup.shutdownGracefully();
         }
     }
 
     public static void main(String[] args) throws Exception {
-        int port = 18091;
-        if (args != null && args.length > 0) {
-            try {
-                port = Integer.valueOf(args[0]);
-            } catch (NumberFormatException e) {
-                // 采用默认值
-            }
-        }
-        new TrafficShappingServer().bind(port);
+        new TrafficShappingServer().bind(18091);
     }
 }

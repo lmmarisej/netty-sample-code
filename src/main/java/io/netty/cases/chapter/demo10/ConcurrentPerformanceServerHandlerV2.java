@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/19.
+ * Created by ææ—å³° on 2018/8/19.
  */
 @ChannelHandler.Sharable
 public class ConcurrentPerformanceServerHandlerV2 extends ChannelInboundHandlerAdapter {
@@ -38,8 +38,7 @@ public class ConcurrentPerformanceServerHandlerV2 extends ChannelInboundHandlerA
     static ExecutorService executorService = Executors.newFixedThreadPool(100);
 
     public ConcurrentPerformanceServerHandlerV2() {
-        scheduledExecutorService.scheduleAtFixedRate(() ->
-        {
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
             int qps = counter.getAndSet(0);
             System.out.println("The server QPS is : " + qps);
         }, 0, 1000, TimeUnit.MILLISECONDS);
@@ -47,10 +46,8 @@ public class ConcurrentPerformanceServerHandlerV2 extends ChannelInboundHandlerA
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ((ByteBuf) msg).release();
-        executorService.execute(() ->
-        {
+        executorService.execute(() -> {
             counter.incrementAndGet();
-            //ÒµÎñÂß¼­´¦Àí£¬Ä£ÄâÒµÎñ·ÃÎÊDB¡¢»º´æµÈ£¬Ê±ÑÓ´Ó100-1000ºÁÃëÖ®¼ä²»µÈ
             Random random = new Random();
             try {
                 TimeUnit.MILLISECONDS.sleep(random.nextInt(1000));
@@ -61,9 +58,8 @@ public class ConcurrentPerformanceServerHandlerV2 extends ChannelInboundHandlerA
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if (evt == SslHandshakeCompletionEvent.SUCCESS) {
-            //Ö´ĞĞÁ÷¿ØÂß¼­
         }
     }
 

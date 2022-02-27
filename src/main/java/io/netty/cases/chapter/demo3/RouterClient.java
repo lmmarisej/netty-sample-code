@@ -41,7 +41,7 @@ public final class RouterClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch)  {
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new RouterClientHandler());
                         }

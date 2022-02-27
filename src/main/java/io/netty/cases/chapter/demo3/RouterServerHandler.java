@@ -37,14 +37,14 @@ public class RouterServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf reqMsg = (ByteBuf) msg;
         byte[] body = new byte[reqMsg.readableBytes()];
-//        ReferenceCountUtil.release(reqMsg);
+//        ReferenceCountUtil.release(reqMsg);       // 不释放将内存泄漏
         executorService.execute(() ->
         {
             //解析请求消息，做路由转发，代码省略...
             //转发成功，返回响应给客户端
             ByteBuf respMsg = allocator.heapBuffer(body.length);
-            respMsg.writeBytes(body);//作为示例，简化处理，将请求返回
-            ctx.writeAndFlush(respMsg);
+            respMsg.writeBytes(body);
+            ctx.writeAndFlush(respMsg);     // writeAndFlush发送完成消息后，Netty会主动帮忙释放
         });
     }
 

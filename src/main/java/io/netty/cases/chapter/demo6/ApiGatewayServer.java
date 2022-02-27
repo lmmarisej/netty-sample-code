@@ -28,7 +28,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 /**
- * Created by ¿Ó¡÷∑Â on 2018/8/11.
+ * Created by ÊùéÊûóÂ≥∞ on 2018/8/11.
  */
 public final class ApiGatewayServer {
 
@@ -45,7 +45,7 @@ public final class ApiGatewayServer {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new ApiGatewayServerHandler());
                         }

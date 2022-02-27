@@ -42,13 +42,10 @@ public class EventTriggerClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch)
-                                throws Exception {
-                            ByteBuf delimiter = Unpooled.copiedBuffer("$_"
-                                    .getBytes());
-                            ch.pipeline().addLast(
-                                    new DelimiterBasedFrameDecoder(2048,
-                                            delimiter));
+                        public void initChannel(SocketChannel ch) {
+                            ByteBuf delimiter = Unpooled.copiedBuffer("$_".getBytes());
+                            // 累积收集消息但不处理，当遇到"$_"，将累积的消息转给handler处理
+                            ch.pipeline().addLast(new DelimiterBasedFrameDecoder(2048, delimiter));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new EventTriggerClientHandler());
                         }
@@ -63,19 +60,7 @@ public class EventTriggerClient {
         }
     }
 
-    /**
-     * @param args
-     * @throws Exception
-     */
     public static void main(String[] args) throws Exception {
-        int port = 18090;
-        if (args != null && args.length > 0) {
-            try {
-                port = Integer.valueOf(args[0]);
-            } catch (NumberFormatException e) {
-                // 采用默认值
-            }
-        }
-        new EventTriggerClient().connect(port, "127.0.0.1");
+        new EventTriggerClient().connect(18090, "127.0.0.1");
     }
 }

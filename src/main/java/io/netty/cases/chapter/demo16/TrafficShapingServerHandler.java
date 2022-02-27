@@ -40,15 +40,12 @@ public class TrafficShapingServerHandler extends ChannelInboundHandlerAdapter {
 
     public TrafficShapingServerHandler() {
         es.scheduleAtFixedRate(() ->
-        {
-            System.out.println("The server receive client rate is : " + counter.getAndSet(0) + " bytes/s");
-        }, 0, 1000, TimeUnit.MILLISECONDS);
-
+                        System.out.println("The server receive client rate is : " + counter.getAndSet(0) + " bytes/s")
+                , 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg)
-            throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String body = (String) msg;
         counter.addAndGet(body.getBytes().length);
         body += "$_";
@@ -59,6 +56,6 @@ public class TrafficShapingServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        ctx.close();// 发生异常，关闭链路
+        ctx.close();                // 发生异常，关闭链路
     }
 }

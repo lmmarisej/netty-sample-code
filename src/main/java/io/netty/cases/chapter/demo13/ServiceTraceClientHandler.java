@@ -25,15 +25,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/19.
+ * Created by æŽæž—å³° on 2018/8/19.
  */
 public class ServiceTraceClientHandler extends ChannelInboundHandlerAdapter {
     static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        scheduledExecutorService.scheduleAtFixedRate(() ->
-        {
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
             for (int i = 0; i < 100; i++) {
                 ByteBuf firstMessage = Unpooled.buffer(ServiceTraceClient.MSG_SIZE);
                 for (int k = 0; k < firstMessage.capacity(); k++) {

@@ -42,6 +42,7 @@ public final class ClientPoolError1 {
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
+                    // TCP链路注册成功后，调用，用于设置ChannelHandler（添加和删除）
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
@@ -49,6 +50,7 @@ public final class ClientPoolError1 {
                     }
                 });
         for (int i = 0; i < poolSize; i++) {
+            // 建议异步连接，并处理连接操作结果，不要阻塞调用方线程
             ChannelFuture f = b.connect(HOST, PORT).sync();
             f.channel().closeFuture().addListener((r) ->
             {

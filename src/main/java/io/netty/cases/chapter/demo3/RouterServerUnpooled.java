@@ -43,7 +43,7 @@ public final class RouterServerUnpooled {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
                             ch.config().setAllocator(UnpooledByteBufAllocator.DEFAULT);
                             p.addLast(new RouterServerHandler());

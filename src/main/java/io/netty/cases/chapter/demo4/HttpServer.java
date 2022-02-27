@@ -15,7 +15,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 
 /**
- * Created by ¿Ó¡÷∑Â on 2018/8/11.
+ * Created by ÊùéÊûóÂ≥∞ on 2018/8/11.
  */
 public class HttpServer {
 
@@ -27,7 +27,7 @@ public class HttpServer {
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(new HttpServerCodec());
                             ch.pipeline().addLast(new HttpObjectAggregator(Short.MAX_VALUE));
                             ch.pipeline().addLast(new HttpServerHandler());

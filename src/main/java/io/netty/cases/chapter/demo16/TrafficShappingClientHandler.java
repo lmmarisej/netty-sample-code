@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class TrafficShappingClientHandler extends ChannelInboundHandlerAdapter {
 
-    private static AtomicInteger SEQ = new AtomicInteger(0);
+    private static final AtomicInteger SEQ = new AtomicInteger(0);
 
     static final byte[] ECHO_REQ = new byte[1024 * 1024];
 
@@ -40,9 +40,8 @@ public class TrafficShappingClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        scheduledExecutorService.scheduleAtFixedRate(()
-                -> {
-            ByteBuf buf = null;
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            ByteBuf buf;
             for (int i = 0; i < 10; i++) {
                 buf = Unpooled.copiedBuffer(ECHO_REQ, DELIMITER.getBytes());
                 SEQ.getAndAdd(buf.readableBytes());

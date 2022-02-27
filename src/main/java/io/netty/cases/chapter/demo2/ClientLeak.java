@@ -49,16 +49,13 @@ public final class ClientLeak {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new LoggingHandler());
                         }
                     });
             ChannelFuture f = b.connect(HOST, PORT).sync();
-            f.channel().closeFuture().addListener((r) ->
-            {
-                group.shutdownGracefully();
-            });
+            f.channel().closeFuture().addListener((r) -> group.shutdownGracefully());
         }
     }
 }

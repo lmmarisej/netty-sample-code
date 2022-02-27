@@ -55,22 +55,19 @@ public class LoadRunnerWaterClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         ctx.channel().config().setWriteBufferHighWaterMark(10 * 1024 * 1024);
-        loadRunner = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    TimeUnit.SECONDS.sleep(30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ByteBuf msg = null;
-                while (true) {
-                    if (ctx.channel().isWritable()) {
-                        msg = Unpooled.wrappedBuffer("Netty OOM Example".getBytes());
-                        ctx.writeAndFlush(msg);
-                    } else {
-                        LOG.warning("The write queue is busy : " + ctx.channel().unsafe().outboundBuffer().nioBufferSize());
-                    }
+        loadRunner = () -> {
+            try {
+                TimeUnit.SECONDS.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            ByteBuf msg;
+            while (true) {
+                if (ctx.channel().isWritable()) {
+                    msg = Unpooled.wrappedBuffer("Netty OOM Example".getBytes());
+                    ctx.writeAndFlush(msg);
+                } else {
+                    LOG.warning("The write queue is busy : " + ctx.channel().unsafe().outboundBuffer().nioBufferSize());
                 }
             }
         };

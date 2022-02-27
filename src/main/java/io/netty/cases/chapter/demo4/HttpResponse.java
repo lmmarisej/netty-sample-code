@@ -7,7 +7,7 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
 
 /**
- * Created by ���ַ� on 2018/8/11.
+ * Created by 李林峰 on 2018/8/11.
  */
 public class HttpResponse {
 
@@ -22,7 +22,7 @@ public class HttpResponse {
         this.response = response;
         if (response.content() != null) {
             body = new byte[response.content().readableBytes()];
-            response.content().getBytes(0, body);
+            response.content().getBytes(0, body);       // 从直接内存拷贝到堆内存
         }
     }
 

@@ -21,7 +21,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
- * Created by ÀîÁÖ·å on 2018/8/11.
+ * Created by ææ—å³° on 2018/8/11.
  */
 public class NoThreadSecurityClientHandler extends ChannelInboundHandlerAdapter {
 

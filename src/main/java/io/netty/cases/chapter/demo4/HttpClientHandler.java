@@ -9,7 +9,7 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.util.concurrent.DefaultPromise;
 
 /**
- * Created by ¿Ó¡÷∑Â on 2018/8/11.
+ * Created by ÊùéÊûóÂ≥∞ on 2018/8/11.
  *
  */
 public class HttpClientHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
@@ -17,17 +17,14 @@ public class HttpClientHandler extends SimpleChannelInboundHandler<FullHttpRespo
     DefaultPromise<HttpResponse> respPromise;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx,
-                                FullHttpResponse msg) throws Exception {
-        if (msg.decoderResult().isFailure())
-            throw new Exception("Decode HttpResponse error : " + msg.decoderResult().cause());
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse msg) throws Exception {
+        if (msg.decoderResult().isFailure()) throw new Exception("Decode HttpResponse error : " + msg.decoderResult().cause());
         HttpResponse response = new HttpResponse(msg);
         respPromise.setSuccess(response);
     }
 
     @Override
-    public void exceptionCaught(
-            ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.close();
     }
